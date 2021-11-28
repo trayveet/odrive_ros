@@ -1,4 +1,4 @@
-#Updated to reflect chnages in the 0.5.4 to work in our robot
+Updated to reflect changes in the 0.5.4 to work in our robot
 Works with odrive id, input_vel and more see interface and launch files
 
 # ARCHIVE NOTICE 2021-02-04
