@@ -1,0 +1,29 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+    <arg name="connect_on_startup"   default="true"/>
+    <arg name="calibrate_on_startup" default="false"/>
+    <arg name="engage_on_startup"    default="true"/>
+    <arg name="use_preroll"          default="false"/>
+
+    <arg name="publish_odom"        default="false"/>
+    <arg name="publish_odom_tf"     default="false"/>
+    <arg name="serial_number"       default="205837735231"/>
+    
+    <arg name="output"   default="screen"/>
+    <arg name="respawn"   default="false"/>
+    
+    <node pkg="odrive_ros" type="odrive_node" name="odrive" ns="odrive" 
+            output="$(arg output)" respawn="$(arg respawn)">
+        <param name="wheel_track" value="0.225"/>
+        <param name="tyre_circumference" value="0.170"/>
+        
+        <param name="connect_on_startup"   value="$(arg connect_on_startup)"/>
+        <param name="calibrate_on_startup" value="$(arg calibrate_on_startup)"/>
+        <param name="engage_on_startup"    value="$(arg engage_on_startup)"/>
+        <param name="use_preroll"          value="$(arg use_preroll)"/>
+        
+        <param name="publish_odom"         value="$(arg publish_odom)"/>
+        <param name="publish_odom_tf"      value="$(arg publish_odom_tf)"/>
+        <param name="serial_number"        type="str" value="$(arg serial_number)"/>
+    </node>
+</launch>
