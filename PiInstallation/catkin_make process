@@ -1,0 +1,10 @@
+catkin_make create issues, so in order to compile odrive_ros
+The package needed to be compiled by itself;
+https://answers.ros.org/question/54178/how-to-build-just-one-package-using-catkin_make/
+
+in terminal
+
+catkin_make --only-pkg-with-deps odrive_ros
+
+in order to switch back to build all packages :
+catkin_make -DCATKIN_WHITELIST_PACKAGES=""

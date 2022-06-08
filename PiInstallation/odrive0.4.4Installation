@@ -1,0 +1,96 @@
+To install odrive ros you need an old version of ODrive. Follow these directions:
+
+
+
+git clone https://github.com/neomanic/ODrive -b py27compat
+cd ODrive/tools/
+python setup.py sdist
+sudo pip install dist/odrive-0.4.4.dev0.tar.gz
+
+pip install IPython==5.0 --user
+
+cd ODrive/tools
+python2 odrivetool shell
+
+Connected to ODrive 205837735231 as odrv0
+
+rosrun odrive_ros odrive_node
+
+to calibrate
+
+odrv0.erase_configuration()
+odrv0.reboot()
+odrv0.config.brake_resistance=0
+odrv0.axis0.motor.config.pole_pairs=15
+odrv0.axis0.motor.config.motor_type =MOTOR_TYPE_HIGH_CURRENT
+odrv0.axis0.encoder.config.cpr=3200
+odrv0.axis0.motor.config.torque_constant = 8.27 / 16
+odrv0.axis0.motor.config.resistance_calib_max_voltage = 10
+odrv0.axis0.motor.config.requested_current_range = 25
+odrv0.axis0.motor.config.current_control_bandwidth = 100
+odrv0.axis0.encoder.config.bandwidth = 100
+odrv0.axis0.controller.config.pos_gain = 1
+odrv0.axis0.controller.config.vel_gain = 0.02 * odrv0.axis0.motor.config.torque_constant * odrv0.axis0.encoder.config.cpr
+odrv0.axis0.controller.config.vel_integrator_gain = 0.1 * odrv0.axis0.motor.config.torque_constant * odrv0.axis0.encoder.config.cpr
+odrv0.axis0.controller.config.vel_limit = 10
+odrv0.axis0.controller.config.control_mode =  CTRL_MODE_VELOCITY_CONTROL
+odrv0.save_configuration()
+odrv0.reboot()
+odrv0.axis0.requested_state = AXIS_STATE_MOTOR_CALIBRATION
+
+  
+
+odrv0.axis0.motor.config.pre_calibrated = True
+
+
+odrv0.axis0.requested_state = AXIS_STATE_ENCODER_OFFSET_CALIBRATION
+odrv0.axis0.encoder.config.pre_calibrated = True
+
+
+odrv0.axis0.motor.config.calibration_current =5
+
+to read data 
+odrv0.axis0.motor
+odrv0.axis0.encoder
+
+
+odrv0.axis0.requested_state = AXIS_STATE_CLOSED_LOOP_CONTROL
+odrv0.axis0.controller.config.vel_ramp_rate = 0.5
+odrv0.axis0.controller.config.input_mode = 2
+odrv0.axis0.encoder.vel_estimate
+odrv0.axis0.motor.current_control.Iq_measured
+odrv0.axis0.motor.current_control.Iq_setpoint
+odrv0.axis0.controller.input_vel = 2
+
+-------------------------------------------------------------------------------
+to install teleop twist keyboard on raspberry do this
+
+cd ~/ros_catkin_ws
+
+rosinstall_generator teleop_twist_keyboard --rosdistro melodic --deps --wet-only --tar > melodic-custom_ros.rosinstall
+
+wstool merge -t src melodic-custom_ros.rosinstall
+
+sudo wstool update -t src #make sure not to back up, just use skip
+
+rosdep install --from-paths src --ignore-src --rosdistro melodic -y -r --os=debian:buster
+
+sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic -j1
+
+-------------------------------------------------------------------------------
+to install teleop twist joy on raspberry do this
+
+cd ~/ros_catkin_ws
+
+rosinstall_generator ros_comm ros_control joystick_drivers teleop_twist_joy --rosdistro melodic --deps --wet-only --tar > melodic-custom_ros_joy.rosinstall
+
+wstool merge -t src melodic-custom_ros_joy.rosinstall
+
+sudo wstool update -t src #make sure not to back up, just use skip
+
+rosdep install --from-paths src --ignore-src --rosdistro melodic -y -r --os=debian:buster
+
+sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --install-space /opt/ros/melodic
+ or this if you only want to build a single or multiple packages
+sudo ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release --pkg odrive_ros --install-space /opt/ros/melodic
+

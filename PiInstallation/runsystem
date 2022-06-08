@@ -1,0 +1,32 @@
+
+roscore
+roslaunch odrive_ros odrive.launch
+#rosrun teleop_twist_keyboard teleop_twist_keyboard.py
+
+use this ideally 
+rosrun ps3joy ps3joy.py --no-disable-bluetoothd --continuous-output
+but it doesn't work
+use this instead until u figure it out
+rosrun ps3joy ps3joy.py --continuous-output
+
+rosrun joy joy_node
+rosparam load /home/pi/ros_catkin_ws/src/teleop_twist_joy/config/ps3.config.yaml
+rosrun teleop_twist_joy teleop_node
+
+
+use
+rosparam list
+rosparam set
+rosparam get
+to check and set enable_button to 11
+
+35563259515441
+
+serial_number=205837735231
+
+initial setup the joystick
+
+sudo bash
+source devel_isolated/setup.bash
+rosrun ps3joy sixpair 
+
